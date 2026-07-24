@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'spin-slow': 'spin 4s linear infinite',
+                        'float': 'float 4s ease-in-out infinite', 
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: 0, transform: 'scale(0.95) translateY(20px)' },
+                            '100%': { opacity: 1, transform: 'scale(1) translateY(0)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="relative flex items-center justify-center min-h-screen p-4 overflow-hidden bg-slate-50 dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-200 transition-colors duration-500 selection:bg-blue-300 dark:selection:bg-blue-700">
+    <button onclick="toggleDarkMode()" class="absolute top-6 right-6 z-50 p-3 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-md shadow-lg border border-slate-200 dark:border-slate-700 hover:scale-110 transition-all duration-300">
+        <svg id="icon-sun" class="w-5 h-5 text-amber-500 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        </svg>
+        <svg id="icon-moon" class="w-5 h-5 text-indigo-500 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+        </svg>
+    </button>
+    <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-blue-400/30 dark:bg-blue-600/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-60 animate-blob pointer-events-none transition-colors duration-500"></div>
+    <div class="fixed top-0 right-1/4 w-[500px] h-[500px] bg-purple-400/30 dark:bg-purple-600/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-60 animate-blob pointer-events-none transition-colors duration-500" style="animation-delay: 2s;"></div>
+    <div class="fixed -bottom-32 left-1/3 w-[500px] h-[500px] bg-pink-400/30 dark:bg-pink-600/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-60 animate-blob pointer-events-none transition-colors duration-500" style="animation-delay: 4s;"></div>
+    <div class="relative z-10 w-full max-w-[380px] animate-fade-in" 
+         data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.2">
+        <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl border border-white/60 dark:border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.1)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] rounded-[2.5rem] p-7 sm:p-9 transition-all duration-300">
+            <div class="text-center mb-7">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white mb-5 shadow-lg shadow-blue-500/30 transform -translate-y-2">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 tracking-tight">Thanh Toán</h1>
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400 mt-2 uppercase tracking-widest"></p>
+            </div>
+
+            <!-- Khu vực QR với hiệu ứng luôn chạy (Float + Spinning Glow) -->
+            <div class="flex justify-center mb-8 animate-float"> <!-- Đã thêm animate-float vào đây -->
+                <div class="relative p-[5px] rounded-[1.6rem] overflow-hidden shadow-lg shadow-blue-500/20 dark:shadow-blue-500/40">
+                    <!-- Viền Gradient Xoay vòng (Chạy liên tục: đổi opacity-0 thành opacity-100) -->
+                    <div class="absolute inset-0 bg-[conic-gradient(from_0deg,#3b82f6_0%,#8b5cf6_33%,#ec4899_66%,#3b82f6_100%)] animate-spin-slow opacity-100"></div>
+                    
+                    <!-- Khung ảnh QR -->
+                    <div class="relative bg-white dark:bg-slate-800 p-3 rounded-[1.3rem]">
+                        <img id="qr-image" 
+                             class="w-52 h-52 object-contain rounded-xl" 
+                             src="https://img.vietqr.io/image/vietinbank-0775596894-compact2.png?accountName=TON%20HOANG%20KHOI" 
+                             alt="Mã QR VietinBank">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin tài khoản -->
+            <div class="space-y-3 bg-slate-50/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-5 border border-slate-100 dark:border-slate-700/50">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-500 dark:text-slate-400 font-medium">Ngân hàng</span>
+                    <span class="font-bold text-blue-600 dark:text-blue-400">VietinBank</span>
+                </div>
+                
+                <div class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent"></div>
+                
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-500 dark:text-slate-400 font-medium">Chủ tài khoản</span>
+                    <span class="font-bold text-slate-800 dark:text-white">TON HOANG KHOI</span>
+                </div>
+                
+                <div class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent"></div>
+
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-500 dark:text-slate-400 font-medium">Số tài khoản</span>
+                    <div class="flex items-center gap-3">
+                        <span class="font-black text-slate-900 dark:text-white text-lg font-mono">0775596894</span>
+                        <button onclick="copySTK()" id="copyBtn" class="group relative flex items-center justify-center w-9 h-9 rounded-xl bg-blue-100/50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-500 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 active:scale-90">
+                            <svg id="icon-copy" class="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            <svg id="icon-check" class="w-5 h-5 hidden drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Ẩn -->
+            <div class="hidden mt-5">
+                <input type="number" id="amount" placeholder="Nhập số tiền..." oninput="updateQRCode()" 
+                       class="w-full bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl focus:ring-0 focus:border-blue-500 dark:focus:border-blue-400 block p-3.5 transition-colors outline-none font-medium placeholder-slate-400">
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Thông báo nổi (Toast) -->
+    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 translate-y-24 opacity-0 transition-all duration-500 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 z-50 font-medium">
+        <div class="bg-green-500 rounded-full p-1">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        Đã sao chép số tài khoản!
+    </div>
+
+    <script>
+        // --- CHẾ ĐỘ TỐI / SÁNG ---
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        // --- CẬP NHẬT QR ---
+        function updateQRCode() {
+            const amount = document.getElementById('amount').value;
+            let qrUrl = "https://img.vietqr.io/image/vietinbank-0775596894-compact2.png?accountName=TON%20HOANG%20KHOI";
+            if (amount && amount > 0) qrUrl += `&amount=${amount}`;
+            document.getElementById('qr-image').src = qrUrl;
+        }
+
+        // --- COPY VÀ HIỂN THỊ TOAST ---
+        function copySTK() {
+            const stk = "0775596894";
+            navigator.clipboard.writeText(stk).then(() => {
+                const btn = document.getElementById('copyBtn');
+                const iconCopy = document.getElementById('icon-copy');
+                const iconCheck = document.getElementById('icon-check');
+                const toast = document.getElementById('toast');
+
+                btn.classList.add('!bg-green-500', '!text-white');
+                iconCopy.classList.add('hidden');
+                iconCheck.classList.remove('hidden');
+
+                toast.classList.remove('translate-y-24', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+
+                setTimeout(() => {
+                    btn.classList.remove('!bg-green-500', '!text-white');
+                    iconCopy.classList.remove('hidden');
+                    iconCheck.classList.add('hidden');
+                    
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                    toast.classList.add('translate-y-24', 'opacity-0');
+                }, 2500);
+            });
+        }
+    </script>
+</body>
+</html>
