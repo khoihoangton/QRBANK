@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR</title>
+    <title>QR Thanh Toán</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     <script>
@@ -53,28 +53,37 @@
     <div class="relative z-10 w-full max-w-[380px] animate-fade-in" 
          data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.2">
         <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl border border-white/60 dark:border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.1)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] rounded-[2.5rem] p-7 sm:p-9 transition-all duration-300">
-            <div class="text-center mb-7">
+            <div class="text-center mb-5">
                 <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white mb-5 shadow-lg shadow-blue-500/30 transform -translate-y-2">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                     </svg>
                 </div>
                 <h1 class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 tracking-tight">Thanh Toán</h1>
-                <p class="text-sm font-medium text-slate-500 dark:text-slate-400 mt-2 uppercase tracking-widest"></p>
+            </div>
+
+            <!-- Tab Chọn Ngân Hàng -->
+            <div class="flex p-1 mb-6 space-x-1 bg-slate-200/50 dark:bg-slate-800/50 rounded-xl">
+                <button onclick="changeBank('vietinbank')" id="tab-vietinbank" class="w-1/2 py-2 text-sm font-semibold rounded-lg bg-white dark:bg-slate-700 shadow text-slate-900 dark:text-white transition-all duration-300">
+                    VietinBank
+                </button>
+                <button onclick="changeBank('vietcombank')" id="tab-vietcombank" class="w-1/2 py-2 text-sm font-medium rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-slate-700/50 transition-all duration-300">
+                    Vietcombank
+                </button>
             </div>
 
             <!-- Khu vực QR với hiệu ứng luôn chạy (Float + Spinning Glow) -->
-            <div class="flex justify-center mb-8 animate-float"> <!-- Đã thêm animate-float vào đây -->
+            <div class="flex justify-center mb-8 animate-float">
                 <div class="relative p-[5px] rounded-[1.6rem] overflow-hidden shadow-lg shadow-blue-500/20 dark:shadow-blue-500/40">
-                    <!-- Viền Gradient Xoay vòng (Chạy liên tục: đổi opacity-0 thành opacity-100) -->
+                    <!-- Viền Gradient Xoay vòng -->
                     <div class="absolute inset-0 bg-[conic-gradient(from_0deg,#3b82f6_0%,#8b5cf6_33%,#ec4899_66%,#3b82f6_100%)] animate-spin-slow opacity-100"></div>
                     
                     <!-- Khung ảnh QR -->
                     <div class="relative bg-white dark:bg-slate-800 p-3 rounded-[1.3rem]">
                         <img id="qr-image" 
-                             class="w-52 h-52 object-contain rounded-xl" 
+                             class="w-52 h-52 object-contain rounded-xl transition-all duration-300" 
                              src="https://img.vietqr.io/image/vietinbank-0775596894-compact2.png?accountName=TON%20HOANG%20KHOI" 
-                             alt="Mã QR VietinBank">
+                             alt="Mã QR">
                     </div>
                 </div>
             </div>
@@ -83,7 +92,7 @@
             <div class="space-y-3 bg-slate-50/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-5 border border-slate-100 dark:border-slate-700/50">
                 <div class="flex justify-between items-center text-sm">
                     <span class="text-slate-500 dark:text-slate-400 font-medium">Ngân hàng</span>
-                    <span class="font-bold text-blue-600 dark:text-blue-400">VietinBank</span>
+                    <span id="display-bank-name" class="font-bold text-blue-600 dark:text-blue-400">VietinBank</span>
                 </div>
                 
                 <div class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent"></div>
@@ -98,7 +107,7 @@
                 <div class="flex justify-between items-center text-sm">
                     <span class="text-slate-500 dark:text-slate-400 font-medium">Số tài khoản</span>
                     <div class="flex items-center gap-3">
-                        <span class="font-black text-slate-900 dark:text-white text-lg font-mono">0775596894</span>
+                        <span id="display-stk" class="font-black text-slate-900 dark:text-white text-lg font-mono">0775596894</span>
                         <button onclick="copySTK()" id="copyBtn" class="group relative flex items-center justify-center w-9 h-9 rounded-xl bg-blue-100/50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-500 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 active:scale-90">
                             <svg id="icon-copy" class="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
@@ -131,22 +140,84 @@
     </div>
 
     <script>
+        // --- DATA NGÂN HÀNG ---
+        const bankData = {
+            vietinbank: {
+                id: 'vietinbank',
+                stk: '0775596894',
+                name: 'TON HOANG KHOI',
+                displayName: 'VietinBank',
+                color: 'text-blue-600 dark:text-blue-400'
+            },
+            vietcombank: {
+                id: 'vietcombank',
+                stk: '1045683896',
+                name: 'TON HOANG KHOI',
+                displayName: 'Vietcombank',
+                color: 'text-green-600 dark:text-green-400'
+            }
+        };
+
+        let currentBank = 'vietinbank';
+
         // --- CHẾ ĐỘ TỐI / SÁNG ---
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
 
+        // --- ĐỔI NGÂN HÀNG ---
+        function changeBank(bankId) {
+            currentBank = bankId;
+            const bank = bankData[bankId];
+
+            // Cập nhật text UI
+            const nameEl = document.getElementById('display-bank-name');
+            nameEl.innerText = bank.displayName;
+            nameEl.className = `font-bold ${bank.color}`; // Đổi màu tên NH cho đẹp
+            
+            document.getElementById('display-stk').innerText = bank.stk;
+
+            // Cập nhật Style cho Tabs
+            const activeClass = "w-1/2 py-2 text-sm font-semibold rounded-lg bg-white dark:bg-slate-700 shadow text-slate-900 dark:text-white transition-all duration-300";
+            const inactiveClass = "w-1/2 py-2 text-sm font-medium rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-slate-700/50 transition-all duration-300";
+
+            if (bankId === 'vietinbank') {
+                document.getElementById('tab-vietinbank').className = activeClass;
+                document.getElementById('tab-vietcombank').className = inactiveClass;
+            } else {
+                document.getElementById('tab-vietcombank').className = activeClass;
+                document.getElementById('tab-vietinbank').className = inactiveClass;
+            }
+
+            // Sinh lại mã QR
+            updateQRCode();
+        }
+
         // --- CẬP NHẬT QR ---
         function updateQRCode() {
             const amount = document.getElementById('amount').value;
-            let qrUrl = "https://img.vietqr.io/image/vietinbank-0775596894-compact2.png?accountName=TON%20HOANG%20KHOI";
+            const bank = bankData[currentBank];
+            
+            // Encode Account Name để đường dẫn URL hợp lệ
+            const accountName = encodeURIComponent(bank.name);
+            let qrUrl = `https://img.vietqr.io/image/${bank.id}-${bank.stk}-compact2.png?accountName=${accountName}`;
+            
             if (amount && amount > 0) qrUrl += `&amount=${amount}`;
-            document.getElementById('qr-image').src = qrUrl;
+            
+            // Cập nhật ảnh (có hiệu ứng mờ nhẹ để thấy thay đổi)
+            const imgEl = document.getElementById('qr-image');
+            imgEl.style.opacity = '0.5';
+            setTimeout(() => {
+                imgEl.src = qrUrl;
+                imgEl.style.opacity = '1';
+            }, 150);
         }
 
         // --- COPY VÀ HIỂN THỊ TOAST ---
         function copySTK() {
-            const stk = "0775596894";
+            // Lấy STK hiện tại đang được chọn
+            const stk = bankData[currentBank].stk; 
+            
             navigator.clipboard.writeText(stk).then(() => {
                 const btn = document.getElementById('copyBtn');
                 const iconCopy = document.getElementById('icon-copy');
